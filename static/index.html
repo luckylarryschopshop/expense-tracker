@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Tracker</title>
+    <style>
+        body { background:#121212; color:#e0e0e0; font-family:sans-serif; padding:20px; }
+        form { margin-bottom:20px; }
+        input, select, button { padding:5px; margin:5px 0; }
+        .expense { border:1px solid #444; padding:10px; margin-bottom:10px; }
+        .summary { display:flex; flex-wrap:wrap; }
+        .bar { flex:1; background:#333; margin:5px; padding:5px; text-align:right; }
+    </style>
+</head>
+<body>
+    <h1>Expense Tracker</h1>
+    <form id="expenseForm">
+        <input type="number" id="amount" placeholder="Amount" required>
+        <select id="category" required>
+            <option value="food">Food</option>
+            <option value="transport">Transport</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="bills">Bills</option>
+            <option value="other">Other</option>
+        </select>
+        <input type="text" id="description" placeholder="Description">
+        <input type="date" id="date">
+        <button type="submit">Add</button>
+    </form>
+    <div id="expenseList"></div>
+    <div class="summary">
+        <div class="bar" id="foodBar">Food: $0</div>
+        <div class="bar" id="transportBar">Transport: $0</div>
+        <div class="bar" id="entertainmentBar">Entertainment: $0</div>
+        <div class="bar" id="billsBar">Bills: $0</div>
+        <div class="bar" id="otherBar">Other: $0</div>
+    </div>
+    <div id="monthlyTotal">Monthly Total: $0</div>
+    <script>
+        const form = document.getElementById('expenseForm');
+        const list = document.getElementById('expenseList');
+        const bars = { food:0, transport:0, entertainment:0, bills:0, other:0 };
+        
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = {
+                amount: parseFloat(e.target.amount.value),
+                category: e.target.category.value,
+                description: e.target.description.value,
+                date: e.target.date.value || new Date().toISOString().split('T')[0]
+            };
+            
+            await fetch('/api/expenses', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+            location.reload();
+        });
+    </script>
+</body>
+</html>
