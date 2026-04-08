@@ -1,0 +1,7 @@
+services:
+  expense-tracker:
+    build: .
+    ports:
+      - "3007:8000"
+    volumes:
+      - ./data:/app/data
